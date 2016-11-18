@@ -23,12 +23,13 @@ public class MailItem
      * @param to The intended recipient of this item.
      * @param message The text of the message to be sent.
      */
-    public MailItem(String from, String to, String message, String subject)
+    public MailItem(String from, String to, String subject, String message)
     {
         this.from = from;
         this.to = to;
-        this.message = message;
         this.subject = subject;
+        this.message = message;
+        
     }
 
     /**
