@@ -28,7 +28,8 @@ public class MailClient
      * del servidor.
      */
     public void numEmails(){
-        System.out.println("Tienes " + server.howManyMailItems(user)+ " correos en el servidor.");
+        int totalEmails = server.howManyMailItems(user);
+        System.out.println("Tienes " + totalEmails + " correos en el servidor.");
     }
 
     /**
@@ -45,8 +46,9 @@ public class MailClient
      *lleve a cabo una respuesta automática.
      */
     private void mailAutomaticDeVacaciones(){
-       MailItem item = server.getNextMailItem(user);  // 1º recupero el mensaje recibido.
-        if(item != null && deVacaciones == true){
+        int numE = server.howManyMailItems(user);  // 1º recupero el mensaje recibido.
+        if(numE > 0 && deVacaciones == true){
+            MailItem item = server.getNextMailItem(user);  // 1º recupero el mensaje recibido.
             sendMailItem(item.getFrom(), item.getSubject(), "\n Estamos de vacaciones.  \n"
                 +item.getMessage()); 
         }//2º lo devuelvo con la respuesta de mensaje  automático.
@@ -58,7 +60,10 @@ public class MailClient
     public MailItem getNextMailItem()
     {
         mailAutomaticDeVacaciones();
-        return server.getNextMailItem(user);
+        MailItem item = server.getNextMailItem(user);
+        
+        deVacaciones = false;
+        return item;
 
     }
 
