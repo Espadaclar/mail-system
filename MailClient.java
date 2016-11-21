@@ -2,7 +2,7 @@
  * A class to model a simple email client. The client is run by a
  * particular user, and sends and retrieves mail via a particular server.
  * 
- * @author David J. Barnes and Michael KÃ¶lling
+ * @author David J. Barnes and Michael Kölling
  * @version 2011.07.31
  */
 public class MailClient
@@ -11,7 +11,13 @@ public class MailClient
     private MailServer server;
     // The user running this client.
     private String user;
-    private boolean deVacaciones;  //--------permite dar una respuesta automáticamente, restAutomaticForHoliday();
+	//Si es true, esta activida la respuesta automatica
+    private boolean respuestaAuto;
+    
+    private String asuntoRespuestaAuto;
+
+    private String mensajeRespuestaAuto;
+
     /**
      * Create a mail client run by user and attached to the given server.
      */
@@ -19,39 +25,9 @@ public class MailClient
     {
         this.server = server;
         this.user = user;
-        deVacaciones = false;  //------utilizado en restAutomaticForHoliday() y en mailAutomaticDeVacaciones().
-    }
-
-    /**
-     * 0171_1) método  que permita saber desde un cliente de correo electrónico cuántos emails tenemos en el servidor para nosotros
-     *  dicha información se muestre por pantalla. Importante: los correos no deben ser descargados
-     * del servidor.
-     */
-    public void numEmails(){
-        int totalEmails = server.howManyMailItems(user);
-        System.out.println("Tienes " + totalEmails + " correos en el servidor.");
-    }
-
-    /**
-     * 0171_2) método que habilite o deshabilite la respuesta automática. En caso de estar habilitada, cada vez que 
-     * invocamos al método getNextMailItem se lleva a cabo la respuesta automática. De inicio, la respuesta automática está 
-     * desactivada. 
-     */
-    public void restAutomaticForHoliday(){//
-        deVacaciones = true;
-    }
-
-    /**
-     * 0171_2) método que permit configurar el mensaje y el asunto que se enviará cuando se
-     *lleve a cabo una respuesta automática.
-     */
-    private void mailAutomaticDeVacaciones(){
-        int numE = server.howManyMailItems(user);  // 1º recupero el mensaje recibido.
-        if(numE > 0 && deVacaciones == true){
-            MailItem item = server.getNextMailItem(user);  // 1º recupero el mensaje recibido.
-            sendMailItem(item.getFrom(), item.getSubject(), "\n Estamos de vacaciones.  \n"
-                +item.getMessage()); 
-        }//2º lo devuelvo con la respuesta de mensaje  automático.
+        respuestaAuto = false;
+        asuntoRespuestaAuto = "";
+        mensajeRespuestaAuto = "";
     }
 
     /**
@@ -59,12 +35,22 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        mailAutomaticDeVacaciones();
+        // Recibimos algo del servidor
         MailItem item = server.getNextMailItem(user);
-        
-        deVacaciones = false;
-        return item;
+        // Si lo que recibimos es un email y la respuesta automatica esta activada...
+        if(respuestaAuto && item != null){
+          // Enviamos un correo de respuesta automaticamente
+          // Creamos el email
+          //MailItem email = new MailItem(user, item.getFrom(), 
+           //                             asuntoRespuestaAuto, mensajeRespuestaAuto);
+          // Enviamos el email        
+          //server.post(email);
+          sendMailItem(item.getFrom(), asuntoRespuestaAuto, mensajeRespuestaAuto);
+        }
 
+        
+        // Devolvemos lo recibido por el servidor
+        return item;
     }
 
     /**
@@ -90,7 +76,39 @@ public class MailClient
      */
     public void sendMailItem(String to, String subject, String message)
     {
-        MailItem item = new MailItem(user, to, subject, message);
+        MailItem item = new MailItem(user, to, message, subject);
         server.post(item);
     }
+    
+    /**
+     * Imprime por pantalla el numero de emails que hay
+     * en el servidor para nosotros sin descargarlos
+     */
+    public void getNumMensajesNoLeidos()
+    {
+    	 System.out.println("El usuario "+ user + " tiene " + 
+    	 					server.howManyMailItems(user) + " mensajes."); 
+    }
+    
+    
+    
+    /**
+     * Permite configurar el texto del asunto y del mensaje de la respuesta
+     * automica.
+     */
+    public void configurarRespuestaAutomatica(String mensajeAutoAnswer1,String asuntoAutoAnswer1)
+    {
+      this.mensajeRespuestaAuto = mensajeAutoAnswer1;
+      this.asuntoRespuestaAuto = asuntoAutoAnswer1;
+    }
+    
+    /**
+     * Habilita o deshabilita la respuesta automática
+     */   
+    public void habilitaRespuestaAuto(boolean activar)
+    {
+      respuestaAuto = activar;
+    }
+    
 }
+

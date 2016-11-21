@@ -2,7 +2,7 @@
  * A class to model a simple mail item. The item has sender and recipient
  * addresses and a message string.
  * 
- * @author David J. Barnes and Michael KÃ¶lling
+ * @author David J. Barnes and Michael Kölling
  * @version 2011.07.31
  */
 public class MailItem
@@ -23,13 +23,12 @@ public class MailItem
      * @param to The intended recipient of this item.
      * @param message The text of the message to be sent.
      */
-    public MailItem(String from, String to, String subject, String message)
+    public MailItem(String from, String to, String message, String subject)
     {
         this.from = from;
         this.to = to;
-        this.subject = subject;
         this.message = message;
-        
+        this.subject = subject;
     }
 
     /**
@@ -55,15 +54,7 @@ public class MailItem
     {
         return message;
     }
-    
-   /**
-     * @return The subject of the message.
-     */
-    public String getSubject()
-    {
-        return subject;
-    }
-    
+
     /**
      * Print this mail message to the text terminal.
      */
