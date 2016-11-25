@@ -17,7 +17,8 @@ public class MailClient
     private String asuntoRespuestaAuto;
 
     private String mensajeRespuestaAuto;
-
+    //para poder ver el último email cuantas veces queramos.
+    private MailItem lastEmail;
     /**
      * Create a mail client run by user and attached to the given server.
      */
@@ -28,6 +29,8 @@ public class MailClient
         respuestaAuto = false;
         asuntoRespuestaAuto = "";
         mensajeRespuestaAuto = "";
+        
+        lastEmail = null;
     }
 
     /**
@@ -35,20 +38,13 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        // Recibimos algo del servidor
         MailItem item = server.getNextMailItem(user);
-        // Si lo que recibimos es un email y la respuesta automatica esta activada...
+        
+        lastEmail = item;//para almacenar el último email recibido.
         if(respuestaAuto && item != null){
-            // Enviamos un correo de respuesta automaticamente
-            // Creamos el email
-            //MailItem email = new MailItem(user, item.getFrom(), 
-            //                             asuntoRespuestaAuto, mensajeRespuestaAuto);
-            // Enviamos el email        
-            //server.post(email);
+
             sendMailItem(item.getFrom(), asuntoRespuestaAuto, mensajeRespuestaAuto);
         }
-
-        // Devolvemos lo recibido por el servidor
         return item;
     }
 
@@ -59,6 +55,7 @@ public class MailClient
     public void printNextMailItem()
     {
         MailItem item = getNextMailItem();
+        lastEmail = item;//para almacenar el último email recibido.
         if(item == null) {
             System.out.println("No new mail.");
         }
@@ -108,6 +105,12 @@ public class MailClient
         respuestaAuto = !respuestaAuto;
 
     }
-
+    
+    /**
+     * muestra por pantalla cuantas veces queramos los datos del último mensaje recibido.
+     */
+    public void muestraUltimoEmail(){
+        lastEmail.print();
+    }
 }
 
