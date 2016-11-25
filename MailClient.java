@@ -11,9 +11,9 @@ public class MailClient
     private MailServer server;
     // The user running this client.
     private String user;
-	//Si es true, esta activida la respuesta automatica
+    //Si es true, esta activida la respuesta automatica
     private boolean respuestaAuto;
-    
+
     private String asuntoRespuestaAuto;
 
     private String mensajeRespuestaAuto;
@@ -39,16 +39,15 @@ public class MailClient
         MailItem item = server.getNextMailItem(user);
         // Si lo que recibimos es un email y la respuesta automatica esta activada...
         if(respuestaAuto && item != null){
-          // Enviamos un correo de respuesta automaticamente
-          // Creamos el email
-          //MailItem email = new MailItem(user, item.getFrom(), 
-           //                             asuntoRespuestaAuto, mensajeRespuestaAuto);
-          // Enviamos el email        
-          //server.post(email);
-          sendMailItem(item.getFrom(), asuntoRespuestaAuto, mensajeRespuestaAuto);
+            // Enviamos un correo de respuesta automaticamente
+            // Creamos el email
+            //MailItem email = new MailItem(user, item.getFrom(), 
+            //                             asuntoRespuestaAuto, mensajeRespuestaAuto);
+            // Enviamos el email        
+            //server.post(email);
+            sendMailItem(item.getFrom(), asuntoRespuestaAuto, mensajeRespuestaAuto);
         }
 
-        
         // Devolvemos lo recibido por el servidor
         return item;
     }
@@ -59,7 +58,7 @@ public class MailClient
      */
     public void printNextMailItem()
     {
-        MailItem item = server.getNextMailItem(user);
+        MailItem item = getNextMailItem();
         if(item == null) {
             System.out.println("No new mail.");
         }
@@ -79,18 +78,17 @@ public class MailClient
         MailItem item = new MailItem(user, to, message, subject);
         server.post(item);
     }
-    
+
     /**
      * Imprime por pantalla el numero de emails que hay
      * en el servidor para nosotros sin descargarlos
      */
     public void getNumMensajesNoLeidos()
     {
-    	 System.out.println("El usuario "+ user + " tiene " + 
-    	 					server.howManyMailItems(user) + " mensajes."); 
+        System.out.println("El usuario "+ user + " tiene " + 
+            server.howManyMailItems(user) + " mensajes."); 
     }
-    
-    
+
     
     /**
      * Permite configurar el texto del asunto y del mensaje de la respuesta
@@ -98,17 +96,18 @@ public class MailClient
      */
     public void configurarRespuestaAutomatica(String mensajeAutoAnswer1,String asuntoAutoAnswer1)
     {
-      this.mensajeRespuestaAuto = mensajeAutoAnswer1;
-      this.asuntoRespuestaAuto = asuntoAutoAnswer1;
+        mensajeRespuestaAuto = mensajeAutoAnswer1;
+        asuntoRespuestaAuto = asuntoAutoAnswer1;
     }
-    
+
     /**
      * Habilita o deshabilita la respuesta automática
      */   
-    public void habilitaRespuestaAuto(boolean activar)
+    public void habilitaRespuestaAuto()
     {
-      respuestaAuto = activar;
+        respuestaAuto = !respuestaAuto;
+
     }
-    
+
 }
 
