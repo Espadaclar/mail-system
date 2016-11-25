@@ -110,7 +110,13 @@ public class MailClient
      * muestra por pantalla cuantas veces queramos los datos del último mensaje recibido.
      */
     public void muestraUltimoEmail(){
-        lastEmail.print();
+        if(lastEmail != null){
+            lastEmail.print();
+        }
+        else{
+            System.out.println("No has recibido ningún mensaje.");
+        }
+        
     }
 }
 
